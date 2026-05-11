@@ -1,0 +1,6 @@
+apiVersion: v2
+name: rikami
+description: Rikami library Chart - used for easy management of resources deployed inside the cluster
+
+type: library
+version: 0.1.0
