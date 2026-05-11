@@ -1,0 +1,70 @@
+name: Lint and package charts
+on:
+  push:
+    branches: [main]
+    paths:
+      - "charts/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "charts/**"
+
+jobs:
+  lint-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6.0.0
+        with:
+          python-version: "3.x"
+          check-latest: true
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.8.0
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            changed=$(ct list-changed --since ${{ github.event.before }} --target-branch ${{ github.event.repository.default_branch }})
+          else
+            changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+          fi
+          if [[ -n "$changed" ]]; then
+            {
+              echo "charts<<EOF"
+              echo "$changed"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Package charts and push
+        if: steps.list-changed.outputs.changed == 'true' && github.event_name == 'push'
+        env:
+          CHARTS: ${{ steps.list-changed.outputs.charts }}
+        run: |
+          mapfile -t charts <<< "$CHARTS"
+          for chart in "${charts[@]}"; do
+            [[ -z "$chart" ]] && continue
+            echo "Packaging $chart"
+            helm package "$chart"
+            chart_name=$(basename "$chart")
+            chart_ver=$(yq '.version' "$chart/Chart.yaml")
+            helm push "${chart_name}-${chart_ver}.tgz" oci://ghcr.io/${{ github.repository_owner }}/rikami-charts
+          done
