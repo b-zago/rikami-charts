@@ -1,4 +1,4 @@
-{{- define "lib.service" -}}
+{{- define "lib.services" -}}
 {{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
 {{- range .Values.services -}}
 apiVersion: v1
