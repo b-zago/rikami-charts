@@ -1,4 +1,4 @@
-{{- define "lib.statefulSet" -}}
+{{- define "lib.statefulSets" -}}
 {{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
 {{- range .Values.statefulSets -}}
 apiVersion: v1
