@@ -1,23 +1,6 @@
 {{- define "lib.statefulsets" -}}
 {{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
 {{- range .Values.statefulsets -}}
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ $appName }}-{{ .name }}-service
-  labels:
-    runs-on: {{ $appName }}-{{ .name }}
-    instance: {{ $appName }}-{{ .name }}-service
-    component: service
-    part-of: {{ $appName }}
-spec:
-  clusterIP: None
-  selector:
-    instance: {{ $appName }}-{{ .name }}
-  ports:
-    - port: {{ .containerPort }}
-      targetPort: {{ .containerPort }}
----
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
