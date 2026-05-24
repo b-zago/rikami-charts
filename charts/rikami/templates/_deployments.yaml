@@ -27,6 +27,9 @@ spec:
       imagePullSecrets:
         - name: {{ .imagePullSecret }}
       {{- end }}
+      {{- if .serviceAccountName }}
+      serviceAccountName: {{ .serviceAccountName }}
+      {{- end }}
       containers:
         - name: {{ $appName }}-{{ .name }}
           image: {{ .image }}
