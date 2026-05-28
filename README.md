@@ -9,6 +9,7 @@ Helm library chart used alongside [rikami](https://github.com/b-zago/rikami) —
 ### Deployments & StatefulSets
 - [ ] Add readiness probes support
 - [ ] Add init containers support
+- [ ] Add resources support
 
 ### Resources to template
 - [ ] HorizontalPodAutoscaler
