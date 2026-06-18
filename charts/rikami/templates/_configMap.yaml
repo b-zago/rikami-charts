@@ -1,0 +1,18 @@
+{{- define "lib.configMap" -}}
+{{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
+{{- range .Values.configMap -}}
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ $appName }}-{{ .name }}
+data:
+{{- range $key, $val := .Values.schemas }}
+  {{ $key }}: |
+{{ $val | indent 4 }}
+{{- end }}
+{{- range $key, $val := .Values.settings }}
+  {{ $key }}: {{ $val | quote }}
+{{- end }}
+---
+{{- end -}}
+{{- end -}}

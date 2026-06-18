@@ -1,6 +1,6 @@
-{{- define "lib.routes" -}}
+{{- define "lib.route" -}}
 {{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
-{{- range .Values.routes -}}
+{{- range .Values.route -}}
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:

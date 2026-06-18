@@ -1,0 +1,21 @@
+{{- define "lib.database" -}}
+{{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
+{{- range .Values.database -}}
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: {{ $appName }}-{{ .name }} 
+  labels:
+    runs-on: {{ .cluster | default "database-cluster" }}
+    instance: {{ $appName }}-{{ .name }}
+    component: {{ .component | default "database"}}
+    part-of: {{ $appName }}
+spec:
+  name: {{ .Release.Name }}
+  owner: {{ .Release.Name }}
+  cluster:
+    name: {{ .cluster | default "database-cluster" }}
+  databaseReclaimPolicy: {{ .databaseReclaimPolicy | default "retain" }}
+---
+{{- end -}}
+{{- end -}}

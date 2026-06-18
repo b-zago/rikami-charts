@@ -1,0 +1,19 @@
+{{- define "lib.atlasSchema" -}}
+{{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
+{{- range .Values.atlasSchema -}}
+apiVersion: db.atlasgo.io/v1alpha1
+kind: AtlasSchema
+metadata:
+  name: {{ $appName }}-{{ .name }}
+spec:
+  urlFrom:
+    secretKeyRef:
+      key: {{ .secretKey | default "url" }}
+      name: {{ .secretName }}
+  schema:
+    configMapKeyRef:
+      key: {{ .schemaCMKey }}
+      name: {{ .schemaCMName }}
+---
+{{- end -}}
+{{- end -}}
