@@ -14,11 +14,11 @@ spec:
   urlFrom:
     secretKeyRef:
       key: {{ .secretKey | default "url" }}
-      name: {{ .secretName }}
+      name: {{ $appName }}-{{ .secretName }}
   schema:
     configMapKeyRef:
       key: {{ .schemaCMKey }}
-      name: {{ .schemaCMName }}
+      name: {{ $appName }}-{{ .schemaCMName }}
 ---
 {{- end -}}
 {{- end -}}
