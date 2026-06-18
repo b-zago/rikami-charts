@@ -1,6 +1,6 @@
-{{- define "lib.deployments" -}}
+{{- define "lib.deployment" -}}
 {{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
-{{- range .Values.deployments -}}
+{{- range .Values.deployment -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -33,7 +33,7 @@ spec:
       containers:
         - name: {{ $appName }}-{{ .name }}
           image: {{ .image }}
-          imagePullPolicy: IfNotPresent 
+          imagePullPolicy: {{ .imagePullPolicy | default "IfNotPresent" }} 
           ports:
             - containerPort: {{ .containerPort }}
           {{- if .envSecretRefs }}
@@ -49,6 +49,9 @@ spec:
             - name: {{ .name }}
               value: {{ .value | quote }}
           {{- end }}
+          {{- end }}
+          {{- if .probes }}
+          {{- toYaml .probes | nindent 10 }}
           {{- end }}
 ---
 {{- end -}}

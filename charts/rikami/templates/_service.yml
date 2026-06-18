@@ -1,6 +1,6 @@
-{{- define "lib.services" -}}
+{{- define "lib.service" -}}
 {{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
-{{- range .Values.services -}}
+{{- range .Values.service -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -19,6 +19,7 @@ spec:
   ports:
     - port: {{ .port | default 80 }}
       targetPort: {{ .targetPort }}
+      name: {{ .portName | default "web" }}
 ---
 {{- end -}}
 {{- end -}}

@@ -1,0 +1,22 @@
+{{- define "lib.serviceMonitor" -}}
+{{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
+{{- range .Values.serviceMonitor -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ $appName }}-{{ .name }}
+  namespace: {{ .monitoringNs | default "monitoring" }}
+spec:
+  selector:
+    matchLabels:
+      instance: {{ $appName }}-{{ .svcName }}
+  namespaceSelector:
+    matchNames:
+      - {{ $.Values.env }}
+  endpoints:
+    - port: {{ .port | default "web" }}
+      path: {{ .path | default "/metrics" }}
+      interval: {{ .interval | default "30s" }}
+---
+{{- end -}}
+{{- end -}}
