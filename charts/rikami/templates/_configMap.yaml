@@ -5,12 +5,17 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: {{ $appName }}-{{ .name }}
+  labels:
+    runs-on: {{ .runsOn }}
+    instance: {{ $appName }}-{{ .name }}
+    component: {{ .component | default "config"}}
+    part-of: {{ $appName }}
 data:
-{{- range $key, $val := .Values.schemas }}
+{{- range $key, $val := .schemas }}
   {{ $key }}: |
 {{ $val | indent 4 }}
 {{- end }}
-{{- range $key, $val := .Values.settings }}
+{{- range $key, $val := .settings }}
   {{ $key }}: {{ $val | quote }}
 {{- end }}
 ---

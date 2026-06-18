@@ -5,6 +5,11 @@ apiVersion: db.atlasgo.io/v1alpha1
 kind: AtlasSchema
 metadata:
   name: {{ $appName }}-{{ .name }}
+  labels:
+    runs-on: {{ .runsOn }}
+    instance: {{ $appName }}-{{ .name }}
+    component: {{ .component | default "schema"}}
+    part-of: {{ $appName }}
 spec:
   urlFrom:
     secretKeyRef:
