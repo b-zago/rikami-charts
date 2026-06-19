@@ -11,8 +11,8 @@ metadata:
     component: {{ .component | default "database"}}
     part-of: {{ $appName }}
 spec:
-  name: {{ .Release.Name }}
-  owner: {{ .Release.Name }}
+  name: {{ $.Release.Name }}
+  owner: {{ $.Release.Name }}
   cluster:
     name: {{ .cluster | default "database-cluster" }}
   databaseReclaimPolicy: {{ .databaseReclaimPolicy | default "retain" }}
