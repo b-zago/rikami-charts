@@ -10,6 +10,8 @@ metadata:
     instance: {{ $appName }}-{{ .name }}
     component: {{ .component | default "schema"}}
     part-of: {{ $appName }}
+    helm.sh/hook: {{ .helmHook | default "pre-install" }}
+    helm.sh/hook-weight: {{ .helmWeight | default "-4" }}
 spec:
   urlFrom:
     secretKeyRef:
