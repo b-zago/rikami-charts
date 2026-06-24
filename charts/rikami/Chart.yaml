@@ -3,4 +3,4 @@ name: rikami
 description: Rikami library Chart - used for easy management of resources deployed inside the cluster
 
 type: library
-version: 0.2.3
+version: 0.2.4
