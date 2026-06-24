@@ -10,8 +10,8 @@ metadata:
     instance: {{ $appName }}-{{ .name }}
     component: {{ .component | default "database"}}
     part-of: {{ $appName }}
-    helm.sh/hook: {{ .helmHook | default "pre-install" }}
-    helm.sh/hook-weight: {{ .helmWeight | default "-5" }}
+    "helm.sh/hook": {{ .helmHook | default "pre-install" }}
+    "helm.sh/hook-weight": {{ .helmWeight | default "-5" }}
 spec:
   name: {{ $.Release.Name }}
   owner: {{ $.Release.Name }}
