@@ -10,6 +10,7 @@ metadata:
     instance: {{ $appName }}-{{ .name }}
     component: {{ .component | default "schema"}}
     part-of: {{ $appName }}
+  annotations:
     "helm.sh/hook": {{ .helmHook | default "pre-install" | quote }}
     "helm.sh/hook-weight": {{ .helmWeight | default "-4" | quote }}
 spec:
