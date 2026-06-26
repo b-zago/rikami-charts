@@ -14,8 +14,8 @@ metadata:
     "helm.sh/hook": {{ .helmHook | default "pre-install" | quote }}
     "helm.sh/hook-weight": {{ .helmWeight | default "-5" | quote }}
 spec:
-  name: {{ $.Release.Name }}
-  owner: {{ $.Release.Name }}
+  name: {{ $appName }}
+  owner: {{ $appName }}
   cluster:
     name: {{ .cluster | default "database-cluster" }}
   databaseReclaimPolicy: {{ .databaseReclaimPolicy | default "retain" }}
