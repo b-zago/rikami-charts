@@ -1,0 +1,43 @@
+{{- define "lib.seedPgJob" -}}
+{{- $appName := regexReplaceAll "-(prod|staging|dev)$" .Release.Name "" -}}
+{{- range .Values.seedPgJob -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ $appName }}-{{ .name }}
+  labels:
+    runs-on: {{ .runsOn }}
+    instance: {{ $appName }}-{{ .name }}
+    component: {{ .component | default "job"}}
+    part-of: {{ $appName }}
+  annotations:
+    "helm.sh/hook-weight": {{ .helmWeight | default "-1" | quote }}
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: seed
+          image: postgres:18-alpine
+          env:
+            - name: PGURL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $appName }}-{{ .secretName }}
+                  key: {{ .secretKey | default "url" }}
+          command: ["psql"]
+          args: ["$(PGURL)", "-v", "ON_ERROR_STOP=1", "-f", "/sql/seed.sql"]
+          volumeMounts:
+            - name: seed-sql
+              mountPath: /sql
+      volumes:
+        - name: seed-sql
+          configMap:
+            name: {{ $appName }}-{{ .cmName }} 
+            items:
+              - key: {{ .cmKey | default "seed.sql" }}
+                path: seed.sql
+---
+{{- end -}}
+{{- end -}}
