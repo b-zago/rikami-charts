@@ -11,9 +11,10 @@ metadata:
     component: {{ .component | default "job"}}
     part-of: {{ $appName }}
   annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
     argocd.argoproj.io/sync-wave: {{ .argoWave | default "-7" | quote }}
 spec:
-  ttlSecondsAfterFinished: 60
   backoffLimit: 5
   template:
     spec:
