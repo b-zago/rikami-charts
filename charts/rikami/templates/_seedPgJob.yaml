@@ -11,8 +11,9 @@ metadata:
     component: {{ .component | default "job"}}
     part-of: {{ $appName }}
   annotations:
-    "helm.sh/hook-weight": {{ .helmWeight | default "-1" | quote }}
+    argocd.argoproj.io/sync-wave: {{ .argoWave | default "-7" | quote }}
 spec:
+  ttlSecondsAfterFinished: 60
   backoffLimit: 5
   template:
     spec:

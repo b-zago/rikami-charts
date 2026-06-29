@@ -11,8 +11,7 @@ metadata:
     component: {{ .component | default "config"}}
     part-of: {{ $appName }}
   annotations:
-    "helm.sh/hook": {{ .helmHook | default "pre-install" | quote }}
-    "helm.sh/hook-weight": {{ .helmWeight | default "-5" | quote }}
+    argocd.argoproj.io/sync-wave: {{ .argoWave | default "-10" | quote }}
 data:
 {{- range $key, $val := .schemas }}
   {{ $key }}: |
