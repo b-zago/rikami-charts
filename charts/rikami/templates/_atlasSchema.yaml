@@ -11,7 +11,7 @@ metadata:
     component: {{ .component | default "schema"}}
     part-of: {{ $appName }}
   annotations:
-    "helm.sh/hook-weight": {{ .helmWeight | default "-2" | quote }}
+    argocd.argoproj.io/sync-wave: {{ .argoWave | default "-8" | quote }}
 spec:
   urlFrom:
     secretKeyRef:
